@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "arxiv": {
+      "command": "uvx",
+      "args": ["blazickjp/arxiv-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "search_arxiv",
+        "get_paper_details",
+        "get_paper_pdf"
+      ]
+    }
+  }
+}
