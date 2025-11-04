@@ -1,0 +1,48 @@
+{
+  "mcpServers": {
+    "arxiv": {
+      "command": "node",
+      "args": ["mcp-servers/arxiv-server/dist/index.js"],
+      "env": {}
+    },
+    "semantic-scholar": {
+      "command": "node",
+      "args": ["mcp-servers/semantic-scholar-server/dist/index.js"],
+      "env": {
+        "SEMANTIC_SCHOLAR_API_KEY": "${SEMANTIC_SCHOLAR_API_KEY}"
+      }
+    },
+    "google-scholar": {
+      "command": "node",
+      "args": ["mcp-servers/google-scholar-server/dist/index.js"],
+      "env": {
+        "SERPAPI_KEY": "${SERPAPI_KEY}"
+      }
+    },
+    "wikipedia": {
+      "command": "node",
+      "args": ["mcp-servers/wikipedia-server/dist/index.js"],
+      "env": {}
+    },
+    "web-search": {
+      "command": "node",
+      "args": ["mcp-servers/web-search-server/dist/index.js"],
+      "env": {
+        "SERPER_API_KEY": "${SERPER_API_KEY}"
+      }
+    },
+    "webscraping": {
+      "command": "node",
+      "args": ["mcp-servers/webscraping-server/dist/index.js"],
+      "env": {}
+    },
+    "news": {
+      "command": "node",
+      "args": ["mcp-servers/news-server/dist/index.js"],
+      "env": {
+        "NEWS_API_KEY": "${NEWS_API_KEY}"
+      }
+    }
+  }
+}
+

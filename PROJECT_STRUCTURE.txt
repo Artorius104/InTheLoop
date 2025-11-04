@@ -1,0 +1,88 @@
+.
+├── .gitignore
+├── ARCHITECTURE.md
+├── CONTRIBUTING.md
+├── LICENSE
+├── PROJECT_STRUCTURE.txt
+├── QUICKSTART.md
+├── README.md
+├── backend
+│   ├── agents
+│   │   ├── __init__.py
+│   │   ├── analyzer.py
+│   │   ├── coordinator.py
+│   │   ├── planner.py
+│   │   ├── reporter.py
+│   │   └── researchers.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   └── routes
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   └── database.py
+│   ├── main.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   └── research.py
+│   └── requirements.txt
+├── config
+│   └── mcp-config.json
+├── docs
+│   ├── API.md
+│   ├── INSTALLATION.md
+│   ├── MCP.md
+│   └── USAGE.md
+├── frontend
+│   ├── .eslintrc.cjs
+│   ├── index.html
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── src
+│   │   ├── App.tsx
+│   │   ├── components
+│   │   ├── index.css
+│   │   ├── main.tsx
+│   │   ├── pages
+│   │   ├── services
+│   │   └── vite-env.d.ts
+│   ├── tailwind.config.js
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   └── vite.config.ts
+├── mcp-servers
+│   ├── README.md
+│   ├── arxiv-server
+│   │   ├── package.json
+│   │   ├── src
+│   │   └── tsconfig.json
+│   ├── google-scholar-server
+│   │   ├── package.json
+│   │   ├── src
+│   │   └── tsconfig.json
+│   ├── news-server
+│   │   ├── package.json
+│   │   ├── src
+│   │   └── tsconfig.json
+│   ├── semantic-scholar-server
+│   │   ├── package.json
+│   │   ├── src
+│   │   └── tsconfig.json
+│   ├── web-search-server
+│   │   ├── package.json
+│   │   ├── src
+│   │   └── tsconfig.json
+│   ├── webscraping-server
+│   │   ├── package.json
+│   │   ├── src
+│   │   └── tsconfig.json
+│   └── wikipedia-server
+│       ├── package.json
+│       ├── src
+│       └── tsconfig.json
+└── scripts
+    ├── build-mcp-servers.sh
+    ├── setup.sh
+    └── start-dev.sh
+
+30 directories, 56 files

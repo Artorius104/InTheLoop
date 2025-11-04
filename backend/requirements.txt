@@ -1,0 +1,36 @@
+# Web Framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.6.0
+pydantic-settings>=2.1.0
+
+# AI & Agents (optional - commenté par défaut)
+# langchain>=0.1.0
+# langchain-openai>=0.0.5
+# langchain-anthropic>=0.0.2
+# langgraph>=0.0.20
+
+# MCP Support
+httpx>=0.26.0
+
+# Data Processing
+arxiv>=2.1.0
+wikipedia>=1.4.0
+beautifulsoup4>=4.12.3
+lxml>=5.1.0
+# feedparser sera installé automatiquement par arxiv avec la bonne version
+
+# Database
+sqlalchemy>=2.0.25
+aiosqlite>=0.19.0
+
+# Utilities
+python-multipart>=0.0.6
+python-dotenv>=1.0.0
+tenacity>=8.2.3
+requests>=2.31.0
+
+# Development
+pytest>=7.4.4
+pytest-asyncio>=0.23.3
+
