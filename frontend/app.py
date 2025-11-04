@@ -71,30 +71,42 @@ def create_research(topic: str, sources: list, max_results: int = 10) -> Optiona
                 "sources": sources,
                 "max_results_per_source": max_results
             },
-            timeout=10
+            timeout=30  # Augmenté à 30 secondes
         )
         response.raise_for_status()
         return response.json()
+    except requests.exceptions.Timeout:
+        st.error("⏱️ Timeout lors de la création. Le backend met trop de temps à répondre.")
+        return None
+    except requests.exceptions.ConnectionError:
+        st.error("🔌 Impossible de se connecter au backend. Vérifiez qu'il est démarré.")
+        return None
     except Exception as e:
-        st.error(f"Erreur lors de la création de la recherche : {str(e)}")
+        st.error(f"❌ Erreur lors de la création de la recherche : {str(e)}")
         return None
 
 
 def get_research(research_id: int) -> Optional[Dict[str, Any]]:
     """Récupère les détails d'une recherche"""
     try:
-        response = requests.get(f"{API_BASE_URL}/research/{research_id}", timeout=10)
+        response = requests.get(f"{API_BASE_URL}/research/{research_id}", timeout=30)  # Augmenté
         response.raise_for_status()
         return response.json()
+    except requests.exceptions.Timeout:
+        # Le timeout est normal pendant que la recherche s'exécute
+        return None
+    except requests.exceptions.ConnectionError:
+        st.error("🔌 Connexion perdue avec le backend")
+        return None
     except Exception as e:
-        st.error(f"Erreur lors de la récupération : {str(e)}")
+        # Ne pas afficher d'erreur pour chaque poll
         return None
 
 
 def list_researches() -> list:
     """Liste toutes les recherches"""
     try:
-        response = requests.get(f"{API_BASE_URL}/research/", timeout=10)
+        response = requests.get(f"{API_BASE_URL}/research/", timeout=15)
         response.raise_for_status()
         return response.json()
     except Exception as e:
@@ -266,43 +278,68 @@ def main():
                     
                     if research:
                         st.success(f"✅ Recherche #{research['id']} créée avec succès !")
+                        st.info(f"🔍 Recherche sur : {', '.join(sources)}")
                         
                         # Polling pour suivre la progression
-                        progress_bar = st.progress(0)
+                        progress_bar = st.progress(0, text="Initialisation...")
                         status_placeholder = st.empty()
+                        result_container = st.container()
                         
-                        max_wait = 120  # 2 minutes max
+                        max_wait = 180  # 3 minutes max
                         elapsed = 0
+                        poll_interval = 3  # Polling toutes les 3 secondes
+                        consecutive_errors = 0
                         
                         while elapsed < max_wait:
-                            research_data = get_research(research['id'])
-                            
-                            if research_data:
-                                status = research_data['status']
-                                status_placeholder.info(f"📊 Statut : {status}")
+                            try:
+                                research_data = get_research(research['id'])
                                 
-                                if status == "completed":
-                                    progress_bar.progress(100)
-                                    status_placeholder.success("✅ Recherche terminée !")
-                                    time.sleep(1)
-                                    st.markdown("---")
-                                    display_research_results(research_data)
+                                if research_data:
+                                    consecutive_errors = 0  # Reset error counter
+                                    status = research_data['status']
+                                    
+                                    # Mise à jour du statut
+                                    if status == "pending":
+                                        progress_bar.progress(10, text="⏳ En attente...")
+                                        status_placeholder.info("📊 Statut : En attente de traitement")
+                                    elif status == "in_progress":
+                                        progress = min(20 + int((elapsed / max_wait) * 70), 90)
+                                        progress_bar.progress(progress, text="🔄 Recherche en cours...")
+                                        status_placeholder.info("📊 Statut : Recherche en cours sur les différentes sources")
+                                    elif status == "completed":
+                                        progress_bar.progress(100, text="✅ Terminé !")
+                                        status_placeholder.success("✅ Recherche terminée avec succès !")
+                                        time.sleep(1)
+                                        
+                                        # Afficher les résultats
+                                        with result_container:
+                                            st.markdown("---")
+                                            display_research_results(research_data)
+                                        break
+                                    elif status == "failed":
+                                        progress_bar.progress(100, text="❌ Échoué")
+                                        status_placeholder.error("❌ La recherche a échoué")
+                                        st.error(f"Erreur : {research_data.get('error', 'Erreur inconnue')}")
+                                        break
+                                else:
+                                    # Pas de données, probablement timeout normal
+                                    consecutive_errors += 1
+                                    if consecutive_errors > 3:
+                                        status_placeholder.warning("⚠️ Difficultés à récupérer le statut, la recherche continue...")
+                                
+                            except Exception as e:
+                                consecutive_errors += 1
+                                if consecutive_errors > 5:
+                                    st.error(f"❌ Trop d'erreurs consécutives : {str(e)}")
                                     break
-                                elif status == "failed":
-                                    progress_bar.progress(100)
-                                    status_placeholder.error("❌ La recherche a échoué")
-                                    st.error(f"Erreur : {research_data.get('error', 'Erreur inconnue')}")
-                                    break
-                                elif status == "in_progress":
-                                    progress = min(50 + (elapsed * 2), 90)
-                                    progress_bar.progress(progress)
                             
-                            time.sleep(2)
-                            elapsed += 2
+                            time.sleep(poll_interval)
+                            elapsed += poll_interval
                         
                         if elapsed >= max_wait:
+                            progress_bar.progress(100, text="⏱️ Timeout")
                             st.warning("⏱️ Temps d'attente dépassé. La recherche continue en arrière-plan.")
-                            st.info(f"Consultez l'historique pour voir les résultats (ID: {research['id']})")
+                            st.info(f"💡 Consultez l'historique pour voir les résultats (Recherche ID: #{research['id']})")
         
         # Exemples
         st.markdown("---")
