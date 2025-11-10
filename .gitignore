@@ -46,4 +46,4 @@ logs/
 Thumbs.db
 
 # Kiro
-.kiro/cache/
+.kiro
