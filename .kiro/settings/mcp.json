@@ -12,6 +12,24 @@
         "get_paper_details",
         "get_paper_pdf"
       ]
+    },
+    "paperswithcode": {
+      "command": "uvx",
+      "args": ["hbg/mcp-paperswithcode@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "search_papers",
+        "get_paper_details",
+        "search_datasets",
+        "get_dataset_details",
+        "search_methods",
+        "get_method_details",
+        "get_leaderboard",
+        "search_tasks"
+      ]
     }
   }
 }
